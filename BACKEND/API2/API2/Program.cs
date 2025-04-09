@@ -6,7 +6,6 @@ using API2.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Szolgáltatások regisztrálása
-builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
 // IWeatherDataRepository regisztrálása a WeatherDataRepository implementációval
 builder.Services.AddSingleton<IWeatherRepository, WeatherRepository>();
