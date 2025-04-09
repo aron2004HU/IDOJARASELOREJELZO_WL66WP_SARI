@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Időjárás Előrejelző</title>
+  <style>
+    /* Alapértelmezett stílusok resetje */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.5s ease;
+    }
+    .forecast-container {
+      width: 90%;
+      max-width: 600px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    .forecast-container h1 {
+      margin-bottom: 20px;
+    }
+    .weather-icon {
+      width: 150px;
+      height: 150px;
+      margin-bottom: 20px;
+    }
+    .forecast-details {
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="forecast-container">
+    <h1>Következő napi időjárás előrejelzés</h1>
+    <!-- Az időjárás típusát jelző ikon -->
+    <img id="weatherIcon" class="weather-icon" src="" alt="Időjárás ikon">
+    <!-- Előrejelzés részletei -->
+    <div class="forecast-details">
+      <p id="weatherType">Időjárás: --</p>
+      <p id="temperature">Hőmérséklet: -- °C</p>
+      <p id="windSpeed">Szélsebesség: -- km/h</p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Mint adat a backend számára: az előző három nap időjárási adatai
+      const sampleData = [
+        { "Temperature": 20.5, "Type": "Napos", "WindSpeed": 10.0 },
+        { "Temperature": 22.0, "Type": "Napos", "WindSpeed": 12.0 },
+        { "Temperature": 19.5, "Type": "Napos", "WindSpeed": 11.0 }
+      ];
+      
+      // Kérés az API-hoz a Forecast kiszámításához
+      fetch("http://localhost:5057/WeatherApi/forecast", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(sampleData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Megjelenítjük az előrejelzés eredményét
+        document.getElementById("weatherType").textContent = "Időjárás: " + data.Type;
+        document.getElementById("temperature").textContent = "Hőmérséklet: " + data.Temperature.toFixed(1) + " °C";
+        document.getElementById("windSpeed").textContent = "Szélsebesség: " + data.WindSpeed.toFixed(1) + " km/h";
+        
+        // A háttérszín és az ikon frissítése az előrejelzett időjárástól függően
+        let bgColor = "";
+        let iconPath = "";
+        switch(data.Type) {
+          case "Napos":
+            bgColor = "#ffe680";  // meleg, világos árnyalat
+            iconPath = "icons/sunny.png";
+            break;
+          case "Borult":
+            bgColor = "#c0c0c0";  // szürke árnyalat
+            iconPath = "icons/cloudy.png";
+            break;
+          case "Esos":
+            bgColor = "#a0c8f0";  // hűvösebb kékes árnyalat
+            iconPath = "icons/rainy.png";
+            break;
+          default:
+            bgColor = "#ffffff";
+            iconPath = "icons/default.png";
+        }
+        document.body.style.backgroundColor = bgColor;
+        document.getElementById("weatherIcon").src = iconPath;
+      })
+      .catch(error => console.error("Hiba az időjárási előrejelzés lekérésekor:", error));
+    });
+  </script>
+</body>
+</html>

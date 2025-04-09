@@ -1,0 +1,6 @@
+[
+    { "Temperature": 20.5, "Type": "Napos", "WindSpeed": 10.0 },
+    { "Temperature": 22.0, "Type": "Napos", "WindSpeed": 12.0 },
+    { "Temperature": 19.5, "Type": "Napos", "WindSpeed": 11.0 }
+  ]
+  
