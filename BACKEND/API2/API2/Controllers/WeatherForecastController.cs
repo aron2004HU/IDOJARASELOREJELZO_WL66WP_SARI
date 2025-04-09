@@ -25,5 +25,22 @@ namespace API2.Controllers
                     return current;
             }
         }
+
+        private WeatherType WorsenWeather(WeatherType current)
+        {
+            switch (current)
+            {
+                case WeatherType.Napos:
+                    return WeatherType.Borult;
+                case WeatherType.Borult:
+                    return WeatherType.Esos;
+                case WeatherType.Esos:
+                    return WeatherType.Esos;
+                case WeatherType.Havas:
+                    return WeatherType.Esos;
+                default:
+                    return current;
+            }
+        }
     }
 }
