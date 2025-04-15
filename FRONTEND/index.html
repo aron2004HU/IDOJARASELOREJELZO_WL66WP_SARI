@@ -6,6 +6,8 @@
   <title>WeatherForecast API Frontend</title>
   <!-- Bootstrap CSS (CDN) -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="p-4">
   <div class="container my-4">
@@ -21,6 +23,8 @@
         <option value="Havas">Havas</option>
       </select>
       <button id="addBtn" class="btn btn-primary mt-2">Adat hozzáadása</button>
+      <!-- Button to clear the stored weather data -->
+      <button id="clearBtn" class="btn btn-secondary mt-2">Adatok törlése</button>
     </div>
 
     <!-- Megjeleníti az eddig eltárolt adatokat -->
@@ -38,86 +42,7 @@
     <div id="result"></div>
   </div>
 
-  <script>
-    // A getEnumValue függvény visszaadja a WeatherType enum megfelelő numerikus értékét:
-    // 0: Napos, 1: Borult, 2: Esos, 3: Havas
-    function getEnumValue(selectedWeather) {
-      switch (selectedWeather) {
-        case "Napos": return 0;
-        case "Borult": return 1;
-        case "Esos": return 2;
-        case "Havas": return 3;
-        default: return 0;
-      }
-    }
-
-    // Globális tömb az eltárolt időjárási adatokhoz (POST kérés payloadjához)
-    let weatherDataArray = [];
-    const dataList = document.getElementById("dataList");
-    const resultDiv = document.getElementById("result");
-
-    // Az "Adat hozzáadása" gomb eseménykezelője: a kiválasztott opció numerikus értékké konvertálva kerül a tömbbe.
-    document.getElementById("addBtn").addEventListener("click", function(){
-      const select = document.getElementById("weatherSelect");
-      const selectedWeather = select.value; // "Napos", "Borult", "Esos", "Havas"
-      weatherDataArray.push({ "Type": getEnumValue(selectedWeather) });
-      updateDataList();
-    });
-
-    // Frissíti az eltárolt adatok listájának megjelenítését
-    function updateDataList(){
-      dataList.innerHTML = "";
-      weatherDataArray.forEach((data, index) => {
-        const li = document.createElement("li");
-        li.className = "list-group-item";
-        li.textContent = "Adat " + (index + 1) + ": " + data.Type;
-        dataList.appendChild(li);
-      });
-    }
-
-    // POST kérés: elküldi a korábbi időjárási adatokat a forecast végponthoz
-    document.getElementById("postBtn").addEventListener("click", function(){
-      fetch("http://localhost:5067/WeatherForecast/forecast", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(weatherDataArray)
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Hiba történt: " + response.status);
-        }
-        return response.json();
-      })
-      .then(data => {
-        resultDiv.innerHTML = `<h3>Előrejelzés eredménye:</h3>
-          <pre>${JSON.stringify(data, null, 2)}</pre>`;
-      })
-      .catch(error => {
-        resultDiv.innerHTML = `<p class="text-danger">Hiba: ${error.message}</p>`;
-      });
-    });
-
-    // GET kérés: lekéri az összes eltárolt időjárási adatot
-    document.getElementById("getBtn").addEventListener("click", function(){
-      fetch("http://localhost:5067/WeatherForecast", {
-        method: "GET"
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Hiba történt: " + response.status);
-        }
-        return response.json();
-      })
-      .then(data => {
-        resultDiv.innerHTML = `<h3>Tárolt adatok:</h3>
-          <pre>${JSON.stringify(data, null, 2)}</pre>`;
-      })
-      .catch(error => {
-        resultDiv.innerHTML = `<p class="text-danger">Hiba: ${error.message}</p>`;
-      });
-    });
-  </script>
+  <!-- External JavaScript -->
+  <script src="script.js" defer></script>
 </body>
 </html>
