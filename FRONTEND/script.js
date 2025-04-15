@@ -10,6 +10,16 @@ function getEnumValue(selectedWeather) {
     }
   }
   
+  function getWeatherTypeName(enumValue) {
+    switch (enumValue) {
+      case 0: return "Napos";
+      case 1: return "Borult";
+      case 2: return "Esős";
+      case 3: return "Havas";
+      default: return 0;
+    }
+  }  
+  
   // Global array to store weather data (for POST payload)
   let weatherDataArray = [];
   const dataList = document.getElementById("dataList");
@@ -19,7 +29,8 @@ function getEnumValue(selectedWeather) {
   document.getElementById("addBtn").addEventListener("click", function(){
     const select = document.getElementById("weatherSelect");
     const selectedWeather = select.value; // "Napos", "Borult", "Esos", "Havas"
-    weatherDataArray.push({ "Type": getEnumValue(selectedWeather) });
+    // unshift instead of push to put it at the beginning of array
+    weatherDataArray.unshift({ "Type": getEnumValue(selectedWeather) });
     updateDataList();
   });
   
@@ -33,9 +44,10 @@ function getEnumValue(selectedWeather) {
   function updateDataList(){
     dataList.innerHTML = "";
     weatherDataArray.forEach((data, index) => {
+      let dayText = (index + 1) > 1 ? " Days ago" : " Day ago";
       const li = document.createElement("li");
       li.className = "list-group-item";
-      li.textContent = "Adat " + (index + 1) + ": " + data.Type;
+      li.textContent = (index + 1) + dayText + ": " + getWeatherTypeName(data.Type);
       dataList.appendChild(li);
     });
   }

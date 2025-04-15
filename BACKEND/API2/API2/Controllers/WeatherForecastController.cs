@@ -29,7 +29,7 @@ namespace API2.Controllers
 
             if (pastWeather.Count >= 3)
             {
-                var lastThree = pastWeather.Skip(pastWeather.Count - 3)
+                var lastThree = pastWeather.Take(3)
                                            .Select(w => w.Type)
                                            .ToList();
                 bool identical = lastThree.Distinct().Count() == 1;
