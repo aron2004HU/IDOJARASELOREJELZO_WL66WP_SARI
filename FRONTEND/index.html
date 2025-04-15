@@ -2,104 +2,121 @@
 <html lang="hu">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Időjárás Előrejelző</title>
-  <style>
-    /* Alapértelmezett stílusok resetje */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.5s ease;
-    }
-    .forecast-container {
-      width: 90%;
-      max-width: 600px;
-      padding: 20px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-    .forecast-container h1 {
-      margin-bottom: 20px;
-    }
-    .weather-icon {
-      width: 150px;
-      height: 150px;
-      margin-bottom: 20px;
-    }
-    .forecast-details {
-      font-size: 1.2rem;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WeatherForecast API Frontend</title>
+  <!-- Bootstrap CSS (CDN) -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
-  <div class="forecast-container">
-    <h1>Következő napi időjárás előrejelzés</h1>
-    <!-- Az időjárás típusát jelző ikon -->
-    <img id="weatherIcon" class="weather-icon" src="" alt="Időjárás ikon">
-    <!-- Előrejelzés részletei -->
-    <div class="forecast-details">
-      <p id="weatherType">Időjárás: --</p>
-      <p id="temperature">Hőmérséklet: -- °C</p>
-      <p id="windSpeed">Szélsebesség: -- km/h</p>
+<body class="p-4">
+  <div class="container my-4">
+    <h1>Időjárás Előrejelző API</h1>
+    <hr>
+    <!-- Adatbevitel: Weather Type opciók -->
+    <div class="form-group">
+      <label for="weatherSelect">Válaszd ki az időjárás típusát:</label>
+      <select id="weatherSelect" class="form-control w-50">
+        <option value="Napos">Napos</option>
+        <option value="Borult">Borult</option>
+        <option value="Esos">Esos</option>
+        <option value="Havas">Havas</option>
+      </select>
+      <button id="addBtn" class="btn btn-primary mt-2">Adat hozzáadása</button>
     </div>
+
+    <!-- Megjeleníti az eddig eltárolt adatokat -->
+    <div class="mb-3">
+      <h4>Eltárolt időjárási adatok</h4>
+      <ul id="dataList" class="list-group"></ul>
+    </div>
+
+    <!-- Két gomb a POST és GET kérésekhez -->
+    <button id="postBtn" class="btn btn-success">Előrejelzés készítése (POST)</button>
+    <button id="getBtn" class="btn btn-info">Összes adat lekérése (GET)</button>
+    
+    <hr>
+    <!-- Itt jelennek meg az eredmények -->
+    <div id="result"></div>
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // Mint adat a backend számára: az előző három nap időjárási adatai
-      const sampleData = [
-        { "Temperature": 20.5, "Type": "Napos", "WindSpeed": 10.0 },
-        { "Temperature": 22.0, "Type": "Napos", "WindSpeed": 12.0 },
-        { "Temperature": 19.5, "Type": "Napos", "WindSpeed": 11.0 }
-      ];
-      
-      // Kérés az API-hoz a Forecast kiszámításához
-      fetch("http://localhost:5057/WeatherApi/forecast", {
+    // A getEnumValue függvény visszaadja a WeatherType enum megfelelő numerikus értékét:
+    // 0: Napos, 1: Borult, 2: Esos, 3: Havas
+    function getEnumValue(selectedWeather) {
+      switch (selectedWeather) {
+        case "Napos": return 0;
+        case "Borult": return 1;
+        case "Esos": return 2;
+        case "Havas": return 3;
+        default: return 0;
+      }
+    }
+
+    // Globális tömb az eltárolt időjárási adatokhoz (POST kérés payloadjához)
+    let weatherDataArray = [];
+    const dataList = document.getElementById("dataList");
+    const resultDiv = document.getElementById("result");
+
+    // Az "Adat hozzáadása" gomb eseménykezelője: a kiválasztott opció numerikus értékké konvertálva kerül a tömbbe.
+    document.getElementById("addBtn").addEventListener("click", function(){
+      const select = document.getElementById("weatherSelect");
+      const selectedWeather = select.value; // "Napos", "Borult", "Esos", "Havas"
+      weatherDataArray.push({ "Type": getEnumValue(selectedWeather) });
+      updateDataList();
+    });
+
+    // Frissíti az eltárolt adatok listájának megjelenítését
+    function updateDataList(){
+      dataList.innerHTML = "";
+      weatherDataArray.forEach((data, index) => {
+        const li = document.createElement("li");
+        li.className = "list-group-item";
+        li.textContent = "Adat " + (index + 1) + ": " + data.Type;
+        dataList.appendChild(li);
+      });
+    }
+
+    // POST kérés: elküldi a korábbi időjárási adatokat a forecast végponthoz
+    document.getElementById("postBtn").addEventListener("click", function(){
+      fetch("http://localhost:5067/WeatherForecast/forecast", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(sampleData)
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(weatherDataArray)
       })
-      .then(response => response.json())
-      .then(data => {
-        // Megjelenítjük az előrejelzés eredményét
-        document.getElementById("weatherType").textContent = "Időjárás: " + data.Type;
-        document.getElementById("temperature").textContent = "Hőmérséklet: " + data.Temperature.toFixed(1) + " °C";
-        document.getElementById("windSpeed").textContent = "Szélsebesség: " + data.WindSpeed.toFixed(1) + " km/h";
-        
-        // A háttérszín és az ikon frissítése az előrejelzett időjárástól függően
-        let bgColor = "";
-        let iconPath = "";
-        switch(data.Type) {
-          case "Napos":
-            bgColor = "#ffe680";  // meleg, világos árnyalat
-            iconPath = "icons/sunny.png";
-            break;
-          case "Borult":
-            bgColor = "#c0c0c0";  // szürke árnyalat
-            iconPath = "icons/cloudy.png";
-            break;
-          case "Esos":
-            bgColor = "#a0c8f0";  // hűvösebb kékes árnyalat
-            iconPath = "icons/rainy.png";
-            break;
-          default:
-            bgColor = "#ffffff";
-            iconPath = "icons/default.png";
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Hiba történt: " + response.status);
         }
-        document.body.style.backgroundColor = bgColor;
-        document.getElementById("weatherIcon").src = iconPath;
+        return response.json();
       })
-      .catch(error => console.error("Hiba az időjárási előrejelzés lekérésekor:", error));
+      .then(data => {
+        resultDiv.innerHTML = `<h3>Előrejelzés eredménye:</h3>
+          <pre>${JSON.stringify(data, null, 2)}</pre>`;
+      })
+      .catch(error => {
+        resultDiv.innerHTML = `<p class="text-danger">Hiba: ${error.message}</p>`;
+      });
+    });
+
+    // GET kérés: lekéri az összes eltárolt időjárási adatot
+    document.getElementById("getBtn").addEventListener("click", function(){
+      fetch("http://localhost:5067/WeatherForecast", {
+        method: "GET"
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Hiba történt: " + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        resultDiv.innerHTML = `<h3>Tárolt adatok:</h3>
+          <pre>${JSON.stringify(data, null, 2)}</pre>`;
+      })
+      .catch(error => {
+        resultDiv.innerHTML = `<p class="text-danger">Hiba: ${error.message}</p>`;
+      });
     });
   </script>
 </body>
