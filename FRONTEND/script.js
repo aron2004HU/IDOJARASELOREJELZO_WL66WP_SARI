@@ -23,7 +23,11 @@ function getEnumValue(selectedWeather) {
     updateDataList();
   });
   
-  
+  // Event handler for clearing the weatherDataArray and updating the display
+  document.getElementById("clearBtn").addEventListener("click", function(){
+    weatherDataArray = [];
+    updateDataList();
+  });
   
   // Updates the displayed list of stored weather data
   function updateDataList(){
