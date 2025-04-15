@@ -15,9 +15,9 @@ namespace API2.Data
             return _weatherDataList;
         }
 
-        public List<WeatherData> GetLastNWeatherData(int n)
-        {
-            return _weatherDataList.Skip(_weatherDataList.Count - n < 0 ? 0 : _weatherDataList.Count - n).ToList();
-        }
+        //public List<WeatherData> GetLastNWeatherData(int n)
+        //{
+        //    return _weatherDataList.Skip(_weatherDataList.Count - n < 0 ? 0 : _weatherDataList.Count - n).ToList();
+        //}
     }
 }

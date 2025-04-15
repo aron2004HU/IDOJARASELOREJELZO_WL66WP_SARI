@@ -6,6 +6,6 @@ namespace API2.Data
     {
         void AddWeatherData(WeatherData weather);
         List<WeatherData> GetAllWeatherData();
-        List<WeatherData> GetLastNWeatherData(int n);
+        //List<WeatherData> GetLastNWeatherData(int n);
     }
 }

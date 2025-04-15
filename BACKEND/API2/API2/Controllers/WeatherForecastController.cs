@@ -82,10 +82,6 @@ namespace API2.Controllers
                     temperature = _random.Next(-5, 6);
                     windSpeed = _random.Next(5, 26);
                     break;
-                default:
-                    temperature = _random.Next(10, 31);
-                    windSpeed = _random.Next(0, 21);
-                    break;
             }
 
             WeatherData result = new WeatherData
@@ -140,11 +136,11 @@ namespace API2.Controllers
             
         }
 
-        [HttpGet("{n}")]
-        public List<WeatherData>? GetLatestWeather(int n)
-        {
-            return this.repo.GetLastNWeatherData(n);
-        }
+        //[HttpGet("{n}")]
+        //public List<WeatherData>? GetLatestWeather(int n)
+        //{
+        //    return this.repo.GetLastNWeatherData(n);
+        //}
 
     }
 }
