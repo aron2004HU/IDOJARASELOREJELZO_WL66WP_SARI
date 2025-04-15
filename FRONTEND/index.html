@@ -75,49 +75,7 @@
       });
     }
 
-    // POST kérés: elküldi a korábbi időjárási adatokat a forecast végponthoz
-    document.getElementById("postBtn").addEventListener("click", function(){
-      fetch("http://localhost:5067/WeatherForecast/forecast", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(weatherDataArray)
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Hiba történt: " + response.status);
-        }
-        return response.json();
-      })
-      .then(data => {
-        resultDiv.innerHTML = `<h3>Előrejelzés eredménye:</h3>
-          <pre>${JSON.stringify(data, null, 2)}</pre>`;
-      })
-      .catch(error => {
-        resultDiv.innerHTML = `<p class="text-danger">Hiba: ${error.message}</p>`;
-      });
-    });
-
-    // GET kérés: lekéri az összes eltárolt időjárási adatot
-    document.getElementById("getBtn").addEventListener("click", function(){
-      fetch("http://localhost:5067/WeatherForecast", {
-        method: "GET"
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Hiba történt: " + response.status);
-        }
-        return response.json();
-      })
-      .then(data => {
-        resultDiv.innerHTML = `<h3>Tárolt adatok:</h3>
-          <pre>${JSON.stringify(data, null, 2)}</pre>`;
-      })
-      .catch(error => {
-        resultDiv.innerHTML = `<p class="text-danger">Hiba: ${error.message}</p>`;
-      });
-    });
+    
   </script>
 </body>
 </html>
