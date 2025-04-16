@@ -1,5 +1,12 @@
 // Returns the numeric value corresponding to the WeatherType
 // 0: Napos, 1: Borult, 2: Esos, 3: Havas
+const weatherTypeIcons = [
+  "sunny.png", // for Napos
+  "cloudy.png",            // for Borult
+  "rainy.png",  // for Esős
+  "snowy.png"  // for Havas
+];
+
 function getEnumValue(selectedWeather) {
     switch (selectedWeather) {
       case "Napos": return 0;
@@ -47,7 +54,20 @@ function getEnumValue(selectedWeather) {
       let dayText = (index + 1) > 1 ? " Days ago" : " Day ago";
       const li = document.createElement("li");
       li.className = "list-group-item";
-      li.textContent = (index + 1) + dayText + ": " + getWeatherTypeName(data.Type);
+      //li.textContent = (index + 1) + dayText + ": " + getWeatherTypeName(data.Type);
+      const text = document.createTextNode((index + 1) + dayText + ": " + getWeatherTypeName(data.Type) + " ");
+      li.appendChild(text);
+      
+      // Create an image element for the pictogram
+      const img = document.createElement("img");
+      img.src = `images/${weatherTypeIcons[data.Type]}`;
+      img.width = 32;  // Set width to 32px
+      img.height = 32; // Set height to 32px
+      img.style.verticalAlign = "middle";
+      // Optional: add a small left margin for spacing
+      img.style.marginLeft = "8px";
+      
+      li.appendChild(img);
       dataList.appendChild(li);
     });
   }
