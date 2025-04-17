@@ -1,23 +1,23 @@
-/* Forecast backgrounds by weather type */
-.bg-napos        { background-color: #f1c40f; }
-.bg-borult       { background-color: #95a5a6; }
-.bg-esos         { background-color: #3498db; }
-.bg-havas        { background-color: #ecf0f1; color: #2c3e50; }
+/* Forecast panel backgrounds */
+.forecast-napos  { background-color: #bcedfc !important; }
+.forecast-borult { background-color: #dde7ee !important; }
+.forecast-esos   { background-color: #6c8094 !important; }
+.forecast-havas  { background-color: #a0e6ec !important; }
 
-/* Darker “previous list” backgrounds */
-.bg-napos-list   { background-color: #dbac0c !important; }
-.bg-borult-list  { background-color: #7f8c8d !important; }
-.bg-esos-list    { background-color: #2980b9 !important; }
-.bg-havas-list   { background-color: #bdc3c7 !important; }
+/* Previous‑list backgrounds */
+.previous-napos  { background-color: #7bc7dd !important; }
+.previous-borult { background-color: #396b89 !important; }
+.previous-esos   { background-color: #4a6583 !important; }
+.previous-havas  { background-color: #a5c0df !important; }
 
-/* Ensure text is white in forecast & previous list */
-.forecast-container,
-.previous-list,
-.previous-list .list-group-item {
+/* Outer page backgrounds */
+.outer-napos     { background-color: #8fe0ff !important; }
+.outer-borult    { background-color: #81a5ba !important; }
+.outer-esos      { background-color: #15719f !important; }
+.outer-havas     { background-color: #8fb5e0 !important; }
+
+/* Ensure forecast text stays white */
+#forecastContainer {
   color: white;
 }
 
-/* Spacing tweaks */
-.previous-list .list-group-item {
-  margin-bottom: 4px;
-}

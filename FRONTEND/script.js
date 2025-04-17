@@ -121,30 +121,30 @@ function getEnumValue(selectedWeather) {
     });
   });
 
-  // NEW: helper to show and style the forecast panel
+  // Helper to show and style the forecast panel
   function showForecast(data) {
-    // remove previous type‐classes
-    ["napos","borult","esos","havas"].forEach(key => {
-      forecastContainer.classList.remove(`bg-${key}`);
-      previousContainer.classList.remove(`bg-${key}-list`);
+    const keys = ["napos","borult","esos","havas"];
+    const key  = keys[data.type];   // JSON field is lowercase 'type'
+
+    // 1) remove all old classes
+    keys.forEach(k => {
+      forecastContainer.classList.remove(`forecast-${k}`);
+      previousContainer .classList.remove(`previous-${k}`);
+      document.body         .classList.remove(`outer-${k}`);
     });
 
-    const keys = ["napos","borult","esos","havas"];
-    // IMPORTANT use lowercase type or else it doesn't work
-    const key  = keys[data.type];
+    // 2) add the new ones
+    forecastContainer.classList.add(`forecast-${key}`);
+    previousContainer .classList.add(`previous-${key}`);
+    document.body         .classList.add(`outer-${key}`);
 
-    // apply new backgrounds
-    forecastContainer.classList.add(`bg-${key}`);
-    previousContainer.classList.add(`bg-${key}-list`);
-
-    // fill in the panel
-    document.getElementById("forecastTemp").textContent     = data.temperature + "°C";
-    // LOWERCASE "type"
-    document.getElementById("forecastIcon").src            = `images/${weatherTypeIcons[data.type]}`;
+    // 3) fill in the numbers/icons (unchanged)
+    document.getElementById("forecastTemp").textContent      = data.temperature + "°C";
+    document.getElementById("forecastIcon").src             = `images/${weatherTypeIcons[data.type]}`;
     document.getElementById("forecastTypeName").textContent = getWeatherTypeName(data.type);
     document.getElementById("forecastWind").textContent     = data.windSpeed + " km/h";
 
-    // show it
+    // 4) reveal it
     forecastContainer.classList.remove("d-none");
   }
 
