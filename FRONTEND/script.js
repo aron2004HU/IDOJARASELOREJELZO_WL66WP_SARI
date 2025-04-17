@@ -32,6 +32,10 @@ function getEnumValue(selectedWeather) {
   const dataList = document.getElementById("dataList");
   const resultDiv = document.getElementById("result");
   
+  // NEW: grab the forecast panel and the previous‐list container
+  const forecastContainer = document.getElementById("forecastContainer");
+  const previousContainer = document.getElementById("previousContainer");
+
   // Event handler for "Adat hozzáadása" button: Convert selection to a numeric value and add to the array
   document.getElementById("addBtn").addEventListener("click", function(){
     const select = document.getElementById("weatherSelect");
@@ -51,10 +55,11 @@ function getEnumValue(selectedWeather) {
   function updateDataList(){
     dataList.innerHTML = "";
     weatherDataArray.forEach((data, index) => {
-      let dayText = (index + 1) > 1 ? " Days ago" : " Day ago";
+      //let dayText = (index + 1) > 1 ? " Days ago" : " Day ago";
+      let dayText = " napja";
+
       const li = document.createElement("li");
       li.className = "list-group-item";
-      //li.textContent = (index + 1) + dayText + ": " + getWeatherTypeName(data.Type);
       const text = document.createTextNode((index + 1) + dayText + ": " + getWeatherTypeName(data.Type) + " ");
       li.appendChild(text);
       
@@ -88,8 +93,8 @@ function getEnumValue(selectedWeather) {
       return response.json();
     })
     .then(data => {
-      resultDiv.innerHTML = `<h3>Előrejelzés eredménye:</h3>
-        <pre>${JSON.stringify(data, null, 2)}</pre>`;
+      // NEW: display the forecast panel
+      showForecast(data)
     })
     .catch(error => {
       resultDiv.innerHTML = `<p class="text-danger">Hiba: ${error.message}</p>`;
@@ -115,4 +120,34 @@ function getEnumValue(selectedWeather) {
       resultDiv.innerHTML = `<p class="text-danger">Hiba: ${error.message}</p>`;
     });
   });
+
+  // NEW: helper to show and style the forecast panel
+  function showForecast(data) {
+    // remove previous type‐classes
+    ["napos","borult","esos","havas"].forEach(key => {
+      forecastContainer.classList.remove(`bg-${key}`);
+      previousContainer.classList.remove(`bg-${key}-list`);
+    });
+
+    const keys = ["napos","borult","esos","havas"];
+    // IMPORTANT use lowercase type or else it doesn't work
+    const key  = keys[data.type];
+
+    // apply new backgrounds
+    forecastContainer.classList.add(`bg-${key}`);
+    previousContainer.classList.add(`bg-${key}-list`);
+
+    // fill in the panel
+    document.getElementById("forecastTemp").textContent     = data.temperature + "°C";
+    // LOWERCASE "type"
+    document.getElementById("forecastIcon").src            = `images/${weatherTypeIcons[data.type]}`;
+    document.getElementById("forecastTypeName").textContent = getWeatherTypeName(data.type);
+    document.getElementById("forecastWind").textContent     = data.windSpeed + " km/h";
+
+    // show it
+    forecastContainer.classList.remove("d-none");
+  }
+
+  // initial render of empty list
+  updateDataList();
   

@@ -4,16 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>WeatherForecast API Frontend</title>
-  <!-- Bootstrap CSS (CDN) -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="p-4">
+<body>
   <div class="container my-4">
-    <h1>Időjárás Előrejelző API</h1>
-    <hr>
-    <!-- Adatbevitel: Weather Type opciók -->
+
+    <h1 class="text-center mb-4">Időjárás Előrejelző</h1>
+
+    <!-- Forecast panel (hidden until you click POST) -->
+    <div id="forecastContainer" class="forecast-container d-none text-white p-4 rounded mb-4">
+      <div class="d-flex align-items-center justify-content-between">
+        <!-- Left: Temperature -->
+        <div class="text-center">
+          <img src="images/temperature.png" width="100" height="100" alt="Hőmérő ikon">
+          <div id="forecastTemp" class="h2 mt-2"></div>
+        </div>
+        <!-- Center: Weather icon -->
+        <div class="text-center">
+          <img id="forecastIcon" src="" width="256" height="256" alt="Weather Icon">
+        </div>
+        <!-- Right: Type name + wind -->
+        <div class="text-center">
+          <div id="forecastTypeName" class="h2 mb-3"></div>
+          <div class="d-flex align-items-center justify-content-center">
+            <img src="images/wind.png" width="32" height="32" alt="Szél ikon">
+            <span id="forecastWind" class="h4 ml-2"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input controls -->
     <div class="form-group">
       <label for="weatherSelect">Válaszd ki az időjárás típusát:</label>
       <select id="weatherSelect" class="form-control w-50">
@@ -22,27 +44,26 @@
         <option value="Esos">Esős</option>
         <option value="Havas">Havas</option>
       </select>
-      <button id="addBtn" class="btn btn-primary mt-2">Adat hozzáadása</button>
-      <!-- Button to clear the stored weather data -->
+      <button id="addBtn"   class="btn btn-primary mt-2">Adat hozzáadása</button>
       <button id="clearBtn" class="btn btn-secondary mt-2">Adatok törlése</button>
     </div>
 
-    <!-- Megjeleníti az eddig eltárolt adatokat -->
-    <div class="mb-3">
-      <h4>Eltárolt időjárási adatok</h4>
+    <!-- Previous days list -->
+    <div id="previousContainer" class="mb-3 previous-list p-3 rounded">
+      <h4 class="text-white">Eltárolt időjárási adatok</h4>
       <ul id="dataList" class="list-group"></ul>
     </div>
 
-    <!-- Két gomb a POST és GET kérésekhez -->
-    <button id="postBtn" class="btn btn-success">Előrejelzés készítése (POST)</button>
-    <button id="getBtn" class="btn btn-info">Összes adat lekérése (GET)</button>
-    
-    <hr>
-    <!-- Itt jelennek meg az eredmények -->
+    <!-- Action buttons -->
+    <div class="mb-4">
+      <button id="postBtn" class="btn btn-success">Előrejelzés készítése (POST)</button>
+      <button id="getBtn"  class="btn btn-info">Összes adat lekérése (GET)</button>
+    </div>
+
+    <!-- Raw JSON result (optional) -->
     <div id="result"></div>
   </div>
 
-  <!-- External JavaScript -->
   <script src="script.js" defer></script>
 </body>
 </html>

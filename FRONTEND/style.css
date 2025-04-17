@@ -1,12 +1,23 @@
-body {
-    background-color: #f8f9fa;
-  }
-  
-  h1, h3 {
-    text-align: center;
-  }
-  
-  #result {
-    margin-top: 20px;
-  }
-  
+/* Forecast backgrounds by weather type */
+.bg-napos        { background-color: #f1c40f; }
+.bg-borult       { background-color: #95a5a6; }
+.bg-esos         { background-color: #3498db; }
+.bg-havas        { background-color: #ecf0f1; color: #2c3e50; }
+
+/* Darker “previous list” backgrounds */
+.bg-napos-list   { background-color: #dbac0c !important; }
+.bg-borult-list  { background-color: #7f8c8d !important; }
+.bg-esos-list    { background-color: #2980b9 !important; }
+.bg-havas-list   { background-color: #bdc3c7 !important; }
+
+/* Ensure text is white in forecast & previous list */
+.forecast-container,
+.previous-list,
+.previous-list .list-group-item {
+  color: white;
+}
+
+/* Spacing tweaks */
+.previous-list .list-group-item {
+  margin-bottom: 4px;
+}
